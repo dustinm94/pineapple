@@ -1,5 +1,5 @@
 from warrant import Cognito
-from flask import request, json
+from flask import request, json, jsonify
 from flask import current_app as app
 
 user_pool_id = 'us-east-2_55B4TeUfn'
@@ -15,5 +15,20 @@ def user_registration():
     last_name = request.json['last_name']
     password = request.json['password']
     cog.add_base_attributes(email=email, name=name, gender=gender, family_name=last_name)
-    cog.register(email, password)
-    return cog.register(email, password)
+    return jsonify(cog.register(email, password))
+
+
+@app.route('/api/pineapple/confirm_user', methods=['POST'])
+def confirm_user():
+    email = request.json['email']
+    confirmation_code = request.json['confirmation_code']
+    cog = Cognito(user_pool_id, client_id)
+    return jsonify(cog.confirm_sign_up(confirmation_code=confirmation_code, username=email))
+
+@app.route('/api/pineapple/login', methods=['POST'])
+def login():
+    email = request.json['email']
+    password = request.json['password']
+    cog = Cognito(user_pool_id, client_id, username=email)
+    return jsonify(cog.authenticate(password))
+

@@ -35,7 +35,7 @@ def get_token():
     password = request.json['password']
     cog = Cognito(user_pool_id, client_id, username=email)
     cog.authenticate(password)
-    response = {'token': 'Bearer ' + cog.access_token}
+    response = {'token': 'Bearer ' + cog.access_token, 'refresh_token': cog.refresh_token, 'id_token': cog.id_token}
     return jsonify(response)
 
 
@@ -49,5 +49,6 @@ def get_user():
         response = client.get_user(AccessToken=token)
     return jsonify(response)
 
+@app.route('/api/pineapple/logout', methods=['POST'])
 def validate_jwt():
 

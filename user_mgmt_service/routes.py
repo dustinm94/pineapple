@@ -9,6 +9,7 @@ client_id = '7pd4rf1889nh4l91jodo5sdmv7'
 
 client = boto3.client('cognito-idp')
 
+
 @app.route('/api/pineapple/register', methods=['POST'])
 def user_registration():
     cog = Cognito(user_pool_id, client_id)
@@ -49,6 +50,13 @@ def get_user():
         response = client.get_user(AccessToken=token)
     return jsonify(response)
 
+
 @app.route('/api/pineapple/logout', methods=['POST'])
-def validate_jwt():
+def logout():
+    id_token = json.request['id_token']
+    refresh_token = json.request['refresh_token']
+    access_token = json.request['access_token']
+    cog = Cognito(id_token=id_token, refresh_token=refresh_token,access_token=access_token)
+    return jsonify(cog.logout())
+
 

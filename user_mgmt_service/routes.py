@@ -2,6 +2,8 @@ from warrant import Cognito
 from flask import request, json, jsonify
 from flask import current_app as app
 
+import boto3
+
 user_pool_id = 'us-east-2_55B4TeUfn'
 client_id = '7pd4rf1889nh4l91jodo5sdmv7'
 
@@ -25,10 +27,27 @@ def confirm_user():
     cog = Cognito(user_pool_id, client_id)
     return jsonify(cog.confirm_sign_up(confirmation_code=confirmation_code, username=email))
 
-@app.route('/api/pineapple/login', methods=['POST'])
-def login():
+
+@app.route('/api/pineapple/get_token', methods=['POST'])
+def get_token():
     email = request.json['email']
     password = request.json['password']
     cog = Cognito(user_pool_id, client_id, username=email)
-    return jsonify(cog.authenticate(password))
+    cog.authenticate(password)
+    response = {'token': 'Bearer ' + cog.access_token}
+    return jsonify(response)
+
+
+@app.route('/api/pineapple/get_user', methods=['GET'])
+def get_user():
+    auth_header = request.headers['Authorization']
+    bearer, _, token = auth_header.partition(' ')
+    if bearer != 'Bearer':
+        raise ValueError('Invalid Token')
+    else:
+        client = boto3.client('cognito-idp')
+        response = client.get_user(AccessToken=token)
+    return jsonify(response)
+
+def validate_jwt():
 

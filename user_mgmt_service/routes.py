@@ -7,6 +7,7 @@ import boto3
 user_pool_id = 'us-east-2_55B4TeUfn'
 client_id = '7pd4rf1889nh4l91jodo5sdmv7'
 
+client = boto3.client('cognito-idp')
 
 @app.route('/api/pineapple/register', methods=['POST'])
 def user_registration():
@@ -45,7 +46,6 @@ def get_user():
     if bearer != 'Bearer':
         raise ValueError('Invalid Token')
     else:
-        client = boto3.client('cognito-idp')
         response = client.get_user(AccessToken=token)
     return jsonify(response)
 

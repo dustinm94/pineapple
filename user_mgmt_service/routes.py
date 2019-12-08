@@ -12,32 +12,59 @@ client = boto3.client('cognito-idp')
 
 @app.route('/api/pineapple/register', methods=['POST'])
 def user_registration():
-    cog = Cognito(user_pool_id, client_id)
     email = request.json['email']
     name = request.json['name']
     gender = request.json['gender']
     last_name = request.json['last_name']
     password = request.json['password']
-    cog.add_base_attributes(email=email, name=name, gender=gender, family_name=last_name)
-    return jsonify(cog.register(email, password))
+    response = client.sign_up(
+        ClientId=client_id,
+        Username=email,
+        Password=password,
+        UserAttributes=[
+            {
+                'Name': 'name',
+                'Value': name,
+            },
+            {
+                'Name': 'family_name',
+                'Value': last_name,
+            },
+            {
+                'Name': 'gender',
+                'Value': gender
+            }
+        ]
+    )
+    return response
 
 
 @app.route('/api/pineapple/confirm_user', methods=['POST'])
 def confirm_user():
     email = request.json['email']
     confirmation_code = request.json['confirmation_code']
-    cog = Cognito(user_pool_id, client_id)
-    return jsonify(cog.confirm_sign_up(confirmation_code=confirmation_code, username=email))
+    response = client.confirm_sign_up(
+        ClientId=client_id,
+        Username=email,
+        ConfirmationCode=confirmation_code
+    )
+    return response
 
 
 @app.route('/api/pineapple/get_token', methods=['POST'])
 def get_token():
     email = request.json['email']
     password = request.json['password']
-    cog = Cognito(user_pool_id, client_id, username=email)
-    cog.authenticate(password)
-    response = {'token': 'Bearer ' + cog.access_token, 'refresh_token': cog.refresh_token, 'id_token': cog.id_token}
-    return jsonify(response)
+    response = client.initiate_auth(
+        ClientId=client_id,
+        AuthFlow='USER_PASSWORD_AUTH',
+        AuthParameters={
+            'USERNAME': email,
+            'PASSWORD': password
+        }
+
+    )
+    return response
 
 
 @app.route('/api/pineapple/get_user', methods=['GET'])
@@ -56,7 +83,9 @@ def logout():
     id_token = json.request['id_token']
     refresh_token = json.request['refresh_token']
     access_token = json.request['access_token']
-    cog = Cognito(id_token=id_token, refresh_token=refresh_token,access_token=access_token)
-    return jsonify(cog.logout())
+    response = client.global_sign_out(
+        AccessToken=access_token
+    )
+    return response
 
 

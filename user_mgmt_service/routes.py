@@ -1,4 +1,3 @@
-from warrant import Cognito
 from flask import request, json, jsonify
 from flask import current_app as app
 

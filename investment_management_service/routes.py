@@ -3,9 +3,11 @@ from sqlalchemy import exc
 from flask import current_app as app
 from .equity_calculator import equity_calculator
 from .models import db, Investment, InvestmentSchema
+from flask_cors import cross_origin
 
 
 @app.route('/api/pineapple/create_investment', methods=['POST'])
+@cross_origin()
 def create_investment():
     auth_token = request.headers['Authorization']
     bearer, _, token = auth_token.partition(' ')
@@ -33,6 +35,7 @@ def create_investment():
 
 
 @app.route('/api/pineapple/get_investments', methods=['GET'])
+@cross_origin()
 def get_investments():
     investments = Investment.query.all()
     investment_schema = InvestmentSchema(many=True)
@@ -40,6 +43,7 @@ def get_investments():
 
 
 @app.route('/api/pineapple/user_investments/<string:email>', methods=['GET'])
+@cross_origin()
 def get_user_investments(email):
     investments = Investment.query.filter(Investment.user_id == email)
     investment_schema = InvestmentSchema()
@@ -47,5 +51,6 @@ def get_user_investments(email):
 
 
 @app.route('/api/pineapple/user_investments/health', methods=['GET'])
+@cross_origin()
 def endpoint_health_check():
     return 'ping'

@@ -13,14 +13,14 @@ def create_investment():
         raise ValueError('Invalid Access Token')
     else:
 
-        percentage_of_fund = equity_calculator(json.request['amount_invested'],
-                                               json.request['size_of_fund'],
-                                               json.request['total_equity_offered'])
+        percentage_of_fund = equity_calculator(request.json['amount_invested'],
+                                               request.json['size_of_fund'],
+                                               request.json['total_equity_offered'])
 
-        new_investment = Investment(user_id=json.request['email'],
-                                    company_name=json.request['company_name'],
-                                    company_id=json.request['company_id'],
-                                    amount_invested=json.request['amount_invested'],
+        new_investment = Investment(user_id=request.json['email'],
+                                    company_name=request.json['company_name'],
+                                    company_id=request.json['company_id'],
+                                    amount_invested=request.json['amount_invested'],
                                     percentage_of_fund=percentage_of_fund)
 
         db.session.add(new_investment)

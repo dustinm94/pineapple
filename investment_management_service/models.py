@@ -8,8 +8,8 @@ class Investment(db.Model):
     user_id = db.Column(db.String(80), index=True)
     company_name = db.Column(db.String(80), index=True)
     company_id = db.Column(db.Integer, index=True)
-    amount_invested = db.Column(db.DECIMAL(19, 4), asdecimal=True)
-    percentage_of_fund = db.Column(db.DECIMAL((1, 2), asdecimal=True))
+    amount_invested = db.Column(db.DECIMAL(precision=19, scale=4, asdecimal=True))
+    percentage_of_fund = db.Column(db.DECIMAL(precision=5, scale=4, asdecimal=True))
 
 
 class InvestmentSchema(ModelSchema):

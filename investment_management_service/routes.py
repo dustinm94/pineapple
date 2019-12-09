@@ -44,3 +44,8 @@ def get_user_investments(email):
     investments = Investment.query.filter(Investment.user_id == email)
     investment_schema = InvestmentSchema()
     return investment_schema.dumps(investments)
+
+
+@app.route('/api/pineapple/user_investments/health', methods=['GET'])
+def endpoint_health_check():
+    return 'ping'

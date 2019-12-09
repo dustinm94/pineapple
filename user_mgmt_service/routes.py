@@ -1,5 +1,6 @@
 from flask import request, json, jsonify
 from flask import current_app as app
+from flask_cors import cross_origin
 
 import boto3
 
@@ -10,6 +11,7 @@ client = boto3.client('cognito-idp')
 
 
 @app.route('/api/pineapple/register', methods=['POST'])
+@cross_origin()
 def user_registration():
     email = request.json['email']
     name = request.json['name']
@@ -39,6 +41,7 @@ def user_registration():
 
 
 @app.route('/api/pineapple/confirm_user', methods=['POST'])
+@cross_origin()
 def confirm_user():
     email = request.json['email']
     confirmation_code = request.json['confirmation_code']
@@ -51,6 +54,7 @@ def confirm_user():
 
 
 @app.route('/api/pineapple/get_token', methods=['POST'])
+@cross_origin()
 def get_token():
     email = request.json['email']
     password = request.json['password']
@@ -67,6 +71,7 @@ def get_token():
 
 
 @app.route('/api/pineapple/get_user', methods=['GET'])
+@cross_origin()
 def get_user():
     auth_header = request.headers['Authorization']
     bearer, _, token = auth_header.partition(' ')
@@ -78,6 +83,7 @@ def get_user():
 
 
 @app.route('/api/pineapple/logout', methods=['POST'])
+@cross_origin()
 def logout():
     id_token = json.request['id_token']
     refresh_token = json.request['refresh_token']

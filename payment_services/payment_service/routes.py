@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 import stripe
 
 
-stripe.api_key = 'sk_test_j1CvBmbOHBtYSwVpWG8ZnYc100ny492Yzc'
+stripe.api_key = ''
 
 
 @app.route('/api/pineapple/one_time_payment', methods=['POST'])

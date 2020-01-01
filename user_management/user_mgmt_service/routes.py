@@ -4,8 +4,8 @@ from flask_cors import cross_origin
 
 import boto3
 
-user_pool_id = 'us-east-2_55B4TeUfn'
-client_id = '7pd4rf1889nh4l91jodo5sdmv7'
+user_pool_id = ''
+client_id = ''
 
 client = boto3.client('cognito-idp')
 

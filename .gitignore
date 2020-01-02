@@ -1,5 +1,8 @@
 venv
+<<<<<<< HEAD
 ./.idea
 *.pyc
 venv
+=======
+>>>>>>> investment/master
 .idea/
